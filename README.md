@@ -1,6 +1,8 @@
 # Password Reset Flow
 
-A complete "forgot password" flow: React (Bootstrap) front-end + Node.js/Express + MongoDB backend, with the reset link emailed via Nodemailer and an expiry time on the link.
+A complete "forgot password" flow: React (Bootstrap) front-end + Node.js/Express + MongoDB backend, with the reset link emailed via the Brevo transactional email API and an expiry time on the link.
+
+**Why Brevo instead of Nodemailer/SMTP?** Render's free tier (and several other free hosts) blocks outbound traffic on SMTP ports (25/465/587), so a Gmail-via-Nodemailer setup that works perfectly on your own machine will hang and time out once deployed. Brevo's API sends over plain HTTPS (port 443), which is never blocked, so it behaves identically locally and in production.
 
 ## How the flow works
 
@@ -17,7 +19,7 @@ A complete "forgot password" flow: React (Bootstrap) front-end + Node.js/Express
 
 ```
 password-reset/
-├── server/     Node.js + Express + MongoDB + Nodemailer API
+├── server/     Node.js + Express + MongoDB + Brevo email API
 └── client/     React (Vite) + Bootstrap front-end
 ```
 
@@ -33,10 +35,11 @@ Edit `.env`:
 
 - `MONGODB_URI` — a MongoDB Atlas connection string (same as the mentor-assignment project; you can reuse the cluster with a different database name, e.g. `.../password-reset?...`).
 - `CLIENT_URL` — the front-end's URL. Locally this is `http://localhost:5173` (Vite's default dev port). After deploying the front-end to Netlify, update this to the Netlify URL.
-- `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USER`, `EMAIL_PASS`, `EMAIL_FROM` — SMTP credentials used to actually send the reset email. Easiest with a Gmail account:
-  1. Turn on **2-Step Verification** on the Gmail account (myaccount.google.com/security).
-  2. Create an **App Password**: myaccount.google.com/apppasswords → generate one for "Mail".
-  3. Use that 16-character app password as `EMAIL_PASS` (not your normal Gmail login password). `EMAIL_USER` is the full Gmail address.
+- `BREVO_API_KEY`, `EMAIL_FROM`, `EMAIL_FROM_NAME` — used to actually send the reset email via Brevo's API:
+  1. Create a free account at [brevo.com](https://www.brevo.com/) (free forever, no credit card).
+  2. Go to **Senders, Domains & Dedicated IPs → Senders → Add a sender**, and add your Gmail address. Brevo emails that address a confirmation link — click it to verify.
+  3. Go to **SMTP & API → API Keys → Generate a new API key**, copy it into `BREVO_API_KEY`.
+  4. Set `EMAIL_FROM` to that same verified Gmail address.
 - `RESET_TOKEN_EXPIRY_MINUTES` — how long the reset link stays valid (default 15).
 
 Run it:
@@ -94,7 +97,7 @@ Opens on `http://localhost:5173`. Pages: `/register`, `/login`, `/forgot-passwor
 cd password-reset
 git init
 git add .
-git commit -m "Password reset flow (React + Node + MongoDB + Nodemailer)"
+git commit -m "Password reset flow (React + Node + MongoDB + Brevo)"
 git branch -M main
 git remote add origin https://github.com/<your-username>/password-reset.git
 git push -u origin main
@@ -108,7 +111,7 @@ git push -u origin main
 2. **Root Directory:** `server` (since the backend lives in a subfolder).
 3. **Build Command:** `npm install`
 4. **Start Command:** `npm start`
-5. Add environment variables (same keys as `server/.env`): `MONGODB_URI`, `CLIENT_URL`, `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USER`, `EMAIL_PASS`, `EMAIL_FROM`, `RESET_TOKEN_EXPIRY_MINUTES`.
+5. Add environment variables (same keys as `server/.env`): `MONGODB_URI`, `CLIENT_URL`, `BREVO_API_KEY`, `EMAIL_FROM`, `EMAIL_FROM_NAME`, `RESET_TOKEN_EXPIRY_MINUTES`.
    - You can set `CLIENT_URL` to your Netlify URL once you have it (step below) — update and it will redeploy.
 6. Deploy. You'll get a URL like `https://password-reset-api.onrender.com`.
 7. In MongoDB Atlas, make sure Network Access allows `0.0.0.0/0` so Render can connect.
