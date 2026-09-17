@@ -1,0 +1,95 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+:root {
+  --brand: #4f46e5;
+  --brand-dark: #4338ca;
+  --bg: #f4f6fb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+}
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(20, 20, 43, 0.08);
+  padding: 32px 28px;
+}
+
+.auth-icon-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #eef0fd;
+  color: var(--brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin: 0 auto 16px;
+}
+
+.auth-title {
+  text-align: center;
+  font-weight: 700;
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+
+.auth-subtitle {
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.btn-brand {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+  font-weight: 600;
+}
+.btn-brand:hover,
+.btn-brand:focus {
+  background: var(--brand-dark);
+  border-color: var(--brand-dark);
+  color: #fff;
+}
+
+.auth-footer-link {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 18px;
+  color: #6b7280;
+}
+.auth-footer-link a {
+  color: var(--brand);
+  text-decoration: none;
+  font-weight: 600;
+}
+.auth-footer-link a:hover {
+  text-decoration: underline;
+}
+
+.input-group-text {
+  background: #f8f9fc;
+}
